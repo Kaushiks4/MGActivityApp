@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "366962984295",
+    "project_id": "mahathma-gandhi",
+    "storage_bucket": "mahathma-gandhi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366962984295:android:45c74a6b56a237b5c85bc2",
+        "android_client_info": {
+          "package_name": "com.example.MG"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366962984295-jag1m72pcnd9n8vhvaahcaptvqc89iqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3HhWPx5mzzzLniiUjG2WrN6N-RL0_7n8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366962984295-jag1m72pcnd9n8vhvaahcaptvqc89iqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
