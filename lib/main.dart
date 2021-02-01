@@ -1,4 +1,4 @@
-import 'package:MG/screens/loginPage.dart';
+import 'package:MG/screens/loading.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -8,6 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: LoginPage());
+    return MaterialApp(home: Loading());
   }
 }

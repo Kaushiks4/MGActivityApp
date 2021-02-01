@@ -1,4 +1,4 @@
-import 'package:MG/screens/loginHome.dart';
+import 'package:MG/screens/chooseYear.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -10,6 +10,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String name = '', error = '', password = '';
+  List<String> privelages;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -146,7 +147,8 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                                 context,
                                 new MaterialPageRoute(
-                                    builder: (context) => new LoginHome(name)));
+                                    builder: (context) =>
+                                        new ChooseYear(name, privelages)));
                           } else {
                             pr.hide();
                           }
@@ -183,6 +185,10 @@ class _LoginPageState extends State<LoginPage> {
       if (users != null) {
         if (users.containsKey(name)) {
           if (users[name]['password'].toString() == password) {
+            privelages = new List();
+            for (var k in users[name]["privelages"].keys) {
+              privelages.add(k);
+            }
             flag = 1;
           } else {
             setState(() {

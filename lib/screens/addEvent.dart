@@ -7,9 +7,9 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class AddActivity extends StatefulWidget {
-  final String name;
+  final String name, year;
   final Map<dynamic, dynamic> database;
-  AddActivity(this.name, this.database);
+  AddActivity(this.name, this.database, this.year);
   @override
   _AddActivityState createState() => _AddActivityState();
 }
@@ -340,7 +340,8 @@ class _AddActivityState extends State<AddActivity> {
                                           context,
                                           new MaterialPageRoute(
                                               builder: (context) =>
-                                                  new LoginHome(widget.name)));
+                                                  new LoginHome(widget.name,
+                                                      widget.year)));
                                     },
                                   ),
                                   TextButton(
@@ -403,7 +404,12 @@ class _AddActivityState extends State<AddActivity> {
     timeStamp = _timeStamp.format(DateTime.now());
     today = _dateFormat.format(DateTime.now());
     final bgRef = FirebaseDatabase.instance.reference().child("Programs");
-    await bgRef.child("Activities").child(activity).child(timeStamp).set({
+    await bgRef
+        .child("Activities")
+        .child(widget.year)
+        .child(activity)
+        .child(timeStamp)
+        .set({
       'district': district,
       'taluk': taluk,
       'gp': gp,
@@ -420,10 +426,12 @@ class _AddActivityState extends State<AddActivity> {
   loadData() {
     activities = new List();
     districts = new List();
-    if (widget.database["Activities"] != null) {
-      for (var key in widget.database["Activities"].keys) {
+    if (widget.database["Activities"][widget.year] != null) {
+      for (var key in widget.database["Activities"][widget.year].keys) {
         activities.add(key);
       }
+    } else {
+      activities.add("");
     }
     if (widget.database["Districts"] != null) {
       for (var key in widget.database["Districts"].keys) {

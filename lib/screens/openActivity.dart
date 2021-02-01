@@ -10,8 +10,8 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:video_player/video_player.dart';
 
 class OpenActivity extends StatefulWidget {
-  final String activityName, timeStamp, name;
-  OpenActivity(this.activityName, this.timeStamp, this.name);
+  final String activityName, timeStamp, name, year;
+  OpenActivity(this.activityName, this.timeStamp, this.name, this.year);
   @override
   _OpenActivityState createState() => _OpenActivityState();
 }
@@ -45,7 +45,6 @@ class _OpenActivityState extends State<OpenActivity> {
         "," +
         positon.longitude.toString().replaceAll('.', '%') +
         ")";
-    print(location);
   }
 
   Future<Position> _determinePosition() async {
@@ -79,7 +78,7 @@ class _OpenActivityState extends State<OpenActivity> {
   @override
   Widget build(BuildContext context) {
     final ProgressDialog pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -132,18 +131,16 @@ class _OpenActivityState extends State<OpenActivity> {
                               if (result.isNotEmpty &&
                                   result[0].rawAddress.isNotEmpty) {
                                 await pr.show();
-                                uploadData(1);
-                                Future.delayed(Duration(seconds: 2), () {
-                                  pr.hide();
-                                  Fluttertoast.showToast(
-                                      msg: "Uploaded successfulyy!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.grey[200],
-                                      textColor: Colors.black,
-                                      fontSize: 16.0);
-                                });
+                                await uploadData(1);
+                                pr.hide();
+                                Fluttertoast.showToast(
+                                    msg: "Uploaded successfulyy!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.grey[200],
+                                    textColor: Colors.black,
+                                    fontSize: 16.0);
                               }
                             } on SocketException catch (_) {
                               Fluttertoast.showToast(
@@ -222,18 +219,16 @@ class _OpenActivityState extends State<OpenActivity> {
                               if (result.isNotEmpty &&
                                   result[0].rawAddress.isNotEmpty) {
                                 await pr.show();
-                                uploadData(0);
-                                Future.delayed(Duration(seconds: 2), () {
-                                  pr.hide();
-                                  Fluttertoast.showToast(
-                                      msg: "Uploaded successfulyy!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.grey[200],
-                                      textColor: Colors.black,
-                                      fontSize: 16.0);
-                                });
+                                await uploadData(0);
+                                pr.hide();
+                                Fluttertoast.showToast(
+                                    msg: "Uploaded successfulyy!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.grey[200],
+                                    textColor: Colors.black,
+                                    fontSize: 16.0);
                               }
                             } on SocketException catch (_) {
                               Fluttertoast.showToast(
@@ -348,18 +343,16 @@ class _OpenActivityState extends State<OpenActivity> {
                               if (result.isNotEmpty &&
                                   result[0].rawAddress.isNotEmpty) {
                                 await pr.show();
-                                uploadData(2);
-                                Future.delayed(Duration(seconds: 2), () {
-                                  pr.hide();
-                                  Fluttertoast.showToast(
-                                      msg: "Uploaded successfulyy!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.grey[200],
-                                      textColor: Colors.black,
-                                      fontSize: 16.0);
-                                });
+                                await uploadData(2);
+                                pr.hide();
+                                Fluttertoast.showToast(
+                                    msg: "Uploaded successfulyy!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.grey[200],
+                                    textColor: Colors.black,
+                                    fontSize: 16.0);
                               }
                             } on SocketException catch (_) {
                               Fluttertoast.showToast(
@@ -422,7 +415,7 @@ class _OpenActivityState extends State<OpenActivity> {
 
   _imgFromCamera(int k) async {
     PickedFile image =
-        await _picker.getImage(source: ImageSource.camera, imageQuality: 10);
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 70);
     if (image != null) {
       filename = DateTime.now().toString() + widget.activityName;
       if (k == 1) {
@@ -464,12 +457,7 @@ class _OpenActivityState extends State<OpenActivity> {
       await uploadPath("Documents", fileUrl);
     }
     if (k == 2) {
-      final bgRef = FirebaseDatabase.instance.reference().child("Programs");
-      await bgRef
-          .child("Activities")
-          .child(widget.activityName)
-          .child(widget.timeStamp)
-          .update({'video': videoUrl});
+      await uploadPath("Videos", fileUrl);
     }
   }
 
@@ -478,6 +466,7 @@ class _OpenActivityState extends State<OpenActivity> {
     final bgRef = FirebaseDatabase.instance.reference().child("Programs");
     await bgRef
         .child("Activities")
+        .child(widget.year)
         .child(widget.activityName)
         .child(widget.timeStamp)
         .child(path)
@@ -491,6 +480,7 @@ class _OpenActivityState extends State<OpenActivity> {
     if (j == 0) {
       await bgRef
           .child("Activities")
+          .child(widget.year)
           .child(widget.activityName)
           .child(widget.timeStamp)
           .child(path)
@@ -498,9 +488,9 @@ class _OpenActivityState extends State<OpenActivity> {
         DateTime.now().toString().replaceAll('.', '%'): {location: url}
       });
     } else {
-      print(url);
       await bgRef
           .child("Activities")
+          .child(widget.year)
           .child(widget.activityName)
           .child(widget.timeStamp)
           .child(path)

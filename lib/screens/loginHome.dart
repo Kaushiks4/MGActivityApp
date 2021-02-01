@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class LoginHome extends StatefulWidget {
-  final String name;
-  LoginHome(this.name);
+  final String name, year;
+  LoginHome(this.name, this.year);
   @override
   _LoginHomeState createState() => _LoginHomeState();
 }
@@ -15,7 +15,6 @@ class LoginHome extends StatefulWidget {
 class _LoginHomeState extends State<LoginHome> {
   bool loading = true;
   DateTime now = DateTime.now();
-  DateFormat _timeStamp = new DateFormat('dd-MM-yyyy-hh:mm');
   DateFormat _dateFormat = new DateFormat('dd-MM-yyyy');
   String today;
   List<Activity> activities;
@@ -36,12 +35,12 @@ class _LoginHomeState extends State<LoginHome> {
       database = data.value;
     });
     if (database["Events"] != null) {
-      if (database["Events"]["25-01-2021"] != null) {
-        for (var key in database["Events"]["25-01-2021"].keys) {
+      if (database["Events"][today] != null) {
+        for (var key in database["Events"][today].keys) {
           activities.add(Activity(
               timeStamp: key,
-              activityName: database["Events"]["25-01-2021"][key]['eventName'],
-              village: database["Events"]["25-01-2021"][key]['village']));
+              activityName: database["Events"][today][key]['eventName'],
+              village: database["Events"][today][key]['village']));
         }
         if (mounted) {
           setState(() {
@@ -105,7 +104,8 @@ class _LoginHomeState extends State<LoginHome> {
         onPressed: () => Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) => new AddActivity(widget.name, database))),
+                builder: (context) =>
+                    new AddActivity(widget.name, database, widget.year))),
         child: Icon(Icons.add),
         backgroundColor: Colors.green,
       ),
@@ -192,7 +192,8 @@ class _LoginHomeState extends State<LoginHome> {
                                                 new OpenActivity(
                                                     activity.activityName,
                                                     activity.timeStamp,
-                                                    widget.name))),
+                                                    widget.name,
+                                                    widget.year))),
                                   ),
                                 ),
                               ],
